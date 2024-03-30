@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>admin</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.9.0/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="flex flex-col justify-center items-center">
+    <div class="mt-8">
+      <h1 class="text-3xl font-bold">Book Store</h1>
+    </div>
+    <div class="my-4 w-[80rem]">
+      <ul class="flex space-x-4">
+        <li><a href="/">Return To Website</a></li>
+        <li><a href="/logout">Logout</a></li>
+      </ul>
+    </div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="p-4 bg-slate-800 text-white rounded-lg mb-4">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <div class="bg-gray-300 rounded-lg p-2 w-[80rem]">
+      <div role="tablist" class="tabs tabs-lifted">
+        <input
+          type="radio"
+          name="my_tabs_2"
+          role="tab"
+          class="tab"
+          aria-label="Books"
+          checked
+        />
+        <div
+          role="tabpanel"
+          class="tab-content bg-base-100 border-base-300 rounded-box p-6 w-full"
+        >
+          <button class="btn" onclick="book_create.showModal()">
+            + Create Book
+          </button>
+          <dialog id="book_create" class="modal">
+            <div class="modal-box">
+              <h3 class="font-bold text-lg">Book Create</h3>
+              <div class="py-4">
+                <form action="{{ url_for('create_book') }}" method="post">
+                  <div class="mb-2">
+                    <input
+                      type="text"
+                      name="title"
+                      placeholder="book title"
+                      class="input input-bordered w-full"
+                    />
+                  </div>
+                  <div class="mb-2">
+                    <select
+                      name="author_id"
+                      class="select select-bordered w-full"
+                    >
+                      <option value="">select author</option>
+                      {% for author in authors %}
+                      <option value="{{ author.id }}">{{ author.name }}</option>
+                      {% endfor %}
+                      
+                    </select>
+                  </div>
+                  <div class="mb-2">
+                    <input
+                      type="text"
+                      name="price"
+                      placeholder="book price"
+                      class="input input-bordered w-full"
+                    />
+                  </div>
+                  <div class="mb-2">
+                    <input
+                      type="text"
+                      name="short_info"
+                      placeholder="book info"
+                      class="input input-bordered w-full"
+                    />
+                  </div>
+                  <div class="mb-2">
+                    <button type="submit" class="btn btn-accent">SEND</button>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-action">
+                <form method="dialog">
+                  <button class="btn">Close</button>
+                </form>
+              </div>
+            </div>
+          </dialog>
+
+          <div class="overflow-x-auto mt-4">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>title</th>
+                  <th>author</th>
+                  <th>info</th>
+                  <th>price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for book in books %}
+                <tr>
+                  <th></th>
+                  <td>{{ book.title }}</td>
+                  <td>{{ book.author.name }}</td>
+                  <td>{{ book.short_info }}</td>
+                  <td>{{ book.price }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <input
+          type="radio"
+          name="my_tabs_2"
+          role="tab"
+          class="tab"
+          aria-label="Authors"
+        />
+        <div
+          role="tabpanel"
+          class="tab-content bg-base-100 border-base-300 rounded-box p-6 w-full"
+        >
+          <button class="btn" onclick="author_create.showModal()">
+            + Create Author
+          </button>
+          <dialog id="author_create" class="modal">
+            <div class="modal-box">
+              <h3 class="font-bold text-lg">Author Create</h3>
+              <div class="py-4">
+                <form action="{{ url_for('create_author') }}" method="post">
+                  <div class="mb-2">
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="author name"
+                      class="input input-bordered w-full"
+                    />
+                  </div>
+                  <div class="mb-2">
+                    <button type="submit" class="btn btn-accent">SEND</button>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-action">
+                <form method="dialog">
+                  <!-- if there is a button in form, it will close the modal -->
+                  <button class="btn">Close</button>
+                </form>
+              </div>
+            </div>
+          </dialog>
+
+          <div class="overflow-x-auto mt-4">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>name</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for author in authors %}
+                <tr>
+                  <th></th>
+                  <td>{{ author.name }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <input
+        type="radio"
+        name="my_tabs_2"
+        role="tab"
+        class="tab"
+        aria-label="Orders"
+      />
+      <div
+        role="tabpanel"
+        class="tab-content bg-base-100 border-base-300 rounded-box p-6 w-full"
+      >
+
+        <div class="overflow-x-auto mt-4">
+          <table class="table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>name</th>
+                <th>phone</th>
+                <th>address</th>
+                <th>book name</th>
+                <th>book price</th>
+                <th>status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in orders %}
+              <tr>
+                <th></th>
+                <td>{{ order.name }}</td>
+                <td>{{ order.phone }}</td>
+                <td>{{ order.address }}</td>
+                <td>{{ order.book.title }}</td>
+                <td>{{ order.price }}</td>
+                <td>{{ order.status }}</td>
+                <td>
+                  <div class="flex">
+                    {% if order.status == "pending" %}
+                    <a href="/admin/order/approve/{{order.id}}" class="btn btn-success">Approved</a>
+                    <a href="/admin/order/deni/{{order.id}}" class="btn btn-error">Denied</a>
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      </div>
+    </div>
+  </body>
+</html>

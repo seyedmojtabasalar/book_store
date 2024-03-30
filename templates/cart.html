@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cart</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.9.0/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex flex-col justify-center items-center">
+    <div class="mt-8">
+        <h1 class="text-3xl font-bold">Book Store</h1>
+    </div>
+    <div class="my-4 w-[80rem]">
+        <ul class="flex space-x-4">
+            <li><a href="/">Home</a></li>
+            <li><a href="/cart">Cart</a></li>
+            <li><a href="/admin">Admin</a></li>
+        </ul>
+    </div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="p-4 bg-slate-800 text-white rounded-lg mb-4">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <div class="bg-gray-300 rounded-lg p-2 w-[80rem]">
+        <table class="table-fixed w-full text-center">
+            <thead>
+                <tr>
+                    <th>Name Book</th>
+                    <th>Price Book</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                    <tr>
+                        <td>{{ book.book.title }}</td>
+                        <td>{{ book.book.price }}</td>
+                        <td>
+                            <a href="/cart/delete/{{book.id}}" class="btn btn-error">delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <button class="btn mt-8" onclick="finish_order.showModal()">Create Order</button>
+        <dialog id="finish_order" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg">Create Order</h3>
+            <div class="py-4">
+                <form action="{{ url_for('checkout') }}" method="post">
+                    <div class="mb-2">
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="user name"
+                        class="input input-bordered w-full"
+                      />
+                    </div>
+                    <div class="mb-2">
+                      <input
+                        type="text"
+                        name="phone"
+                        placeholder="user phone"
+                        class="input input-bordered w-full"
+                      />
+                    </div>
+                    <div class="mb-2">
+                      <input
+                        type="text"
+                        name="address"
+                        placeholder="user address"
+                        class="input input-bordered w-full"
+                      />
+                    </div>
+                    <div class="mb-2">
+                      <button type="submit" class="btn btn-accent">SEND</button>
+                    </div>
+                  </form>
+            </div>
+            <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Close</button>
+            </form>
+            </div>
+        </div>
+        </dialog>
+    </div>
+</body>
+</html>
